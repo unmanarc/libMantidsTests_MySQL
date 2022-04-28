@@ -31,6 +31,9 @@ public:
     ///////////////////
     static bool getStatusOK();
 
+    static Mantids::Database::SQLConnector_MariaDB *getDatabase();
+
+
 private:
     // WEB DISPLAY FUNCTIONS:
     static json getMessages(Mantids::Authentication::Manager *auth, Mantids::Authentication::Session *sess,const json &payload);
