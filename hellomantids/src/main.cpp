@@ -152,7 +152,6 @@ public:
         // Create the DB / Get database status...
         if (!DB::start())
         {
-            Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s", Globals::getDatabase()->getDBName().c_str());
             return false;
         }
 
