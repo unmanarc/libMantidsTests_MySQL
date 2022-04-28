@@ -35,8 +35,6 @@ public:
     static Mantids::RPC::Web::WebServer *getWebServer();
     static void setWebServer(Mantids::RPC::Web::WebServer *value);
 
-    // Database:
-    static Mantids::Database::SQLConnector_MariaDB *getDatabase();
 
 private:
     static Mantids::Application::Logs::AppLog * applog;
@@ -44,8 +42,6 @@ private:
     static Mantids::RPC::Fast::FastRPC * fastRPC;
     static LoginRPCClientImpl loginRPCClient;
     static Mantids::RPC::Web::WebServer * webServer;
-    static Mantids::Database::SQLConnector_MariaDB * database;
-    static std::mutex mDatabase;
 };
 
 

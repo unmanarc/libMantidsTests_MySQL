@@ -6,8 +6,6 @@ Mantids::RPC::Fast::FastRPC * Globals::fastRPC = nullptr;
 
 LoginRPCClientImpl Globals::loginRPCClient;
 Mantids::RPC::Web::WebServer * Globals::webServer = nullptr;
-Mantids::Database::SQLConnector_MariaDB * Globals::database = nullptr;
-std::mutex Globals::mDatabase;
 
 
 Globals::Globals()
@@ -57,9 +55,4 @@ Mantids::RPC::Web::WebServer *Globals::getWebServer()
 void Globals::setWebServer(Mantids::RPC::Web::WebServer *value)
 {
     webServer = value;
-}
-
-Mantids::Database::SQLConnector_MariaDB *Globals::getDatabase()
-{
-    return database;
 }
