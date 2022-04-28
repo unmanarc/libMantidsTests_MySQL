@@ -1,0 +1,90 @@
+<cinc_>/includes/header.html</cinc_>
+<script>
+      document.getElementById("apptitle").innerHTML = "Main Pages &#9658; >>> Page 1 <<< ";
+      //    document.getElementById("apptitlemaster").innerHTML = "";
+
+    // Default Main View:
+    function csrfReady() {
+        requestPage1View();
+    }
+
+    function requestPage1View() {
+        ajaxRemoteExecuteMethod("stats", "DB", "getMessages",
+                {
+                },
+                function drawMessages(result) {
+                    console.log(result);
+                    document.getElementById("messageList").innerHTML = "There are no messages in the database!";
+                    if (result == null)
+                        return;
+
+                        document.getElementById("messageList").innerHTML = "";
+
+                    for (let msg of result) {
+                        if (msg == null)
+                            continue;
+
+                        let messageId = parseInt(msg["id"]);
+
+                        $("#messageList").append(`
+                            <b>Owner:</b> <span id="owner${messageId}"></span><br>
+                            <b>Date:</b> <span id="date${messageId}"></span><br>
+                            <b>Message:</b> <span id="message${messageId}"></span><br>
+                            <input type=button value=remove onclick="javascript:removeMessage(${messageId});">
+                            <hr>
+                            `);
+
+                        $(`#owner${messageId}`).text(msg["createdBy"]);
+                        $(`#date${messageId}`).text(msg["creationDate"]);
+                        $(`#message${messageId}`).text(msg["message"]);
+                    }
+                });
+    }
+
+    function addMessage()
+    {
+        ajaxRemoteExecuteMethod("control", "DB", "createMessage",
+        {
+            "message": $("#message").val()
+        },
+        function f(r) {
+            if (r == true)
+            location.reload();
+            else
+            alert("Error adding new Message!");
+        });
+    }
+    function removeMessage(id)
+    {
+        ajaxRemoteExecuteMethod("control", "DB", "removeMessage",
+        {
+            "id": id
+        },
+        function f(r) {
+            if (r == true)
+            location.reload();
+            else
+            alert("Error removing new Message!");
+        });
+    }
+</script>
+
+<table width=50% align=center>
+    <tr><td align=center>
+        Create your own message:
+        <hr>
+        <input type=text id=message width=100%>
+        <input type=button value=add onclick="javascript:addMessage();">
+
+    </td></tr>
+</table>
+
+<hr>
+
+<table width=50% align=center>
+    <tr><td align=center>
+        <div id="messageList"></div>
+    </td></tr>
+</table>
+
+<cinc_>/includes/footer.html</cinc_>

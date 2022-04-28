@@ -1,0 +1,43 @@
+<cinc_>/includes/header.html</cinc_>
+<script>
+      document.getElementById("apptitle").innerHTML = "Main Pages &#9658; >>> Page 2 - Add 1 value... <<< ";
+      //    document.getElementById("apptitlemaster").innerHTML = "";
+
+    // Default Main View:
+    function csrfReady() {
+    }
+
+    function add1Value()
+    {
+        ajaxRemoteExecuteMethod("stats", "DB", "getAdd1",
+        {
+            "value": parseInt($("#value").val())
+        },
+        function f(r) 
+        {
+          console.log(r);
+          $(`#result`).text(r);
+        });
+    }
+    
+</script>
+
+<table width=50% align=center>
+    <tr><td align=center>
+        Add 1:
+        <hr>
+        <input type=number id=value width=100%>
+        <input type=button value=add onclick="javascript:add1Value();">
+
+    </td></tr>
+</table>
+
+<hr>
+
+<table width=50% align=center>
+    <tr><td align=center>
+        <div id="result"></div>
+    </td></tr>
+</table>
+
+<cinc_>/includes/footer.html</cinc_>
