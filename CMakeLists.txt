@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.10)
 set(SVERSION 1.0.1)
 
 set(PROJECT_HOMEPAGE_URL "https://github.com/evaamo/libMantidsMariaDBTests")
-set(PROJECT_CONTACT "Enrique Vaamonde <evaamo@dqddi.com>")
+set(PROJECT_CONTACT "Enrique Vaamonde <ev@dqddi.com>")
 ##############################################################################################################################
 
 ##############################################################################################################################
