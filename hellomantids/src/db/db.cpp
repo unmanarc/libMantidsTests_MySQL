@@ -43,7 +43,7 @@ bool DB::start()
         Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "Succesfully connected to MySQL Database server '%s' ", dbHost.c_str());
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%d", DB::getDatabase()->getDBName().c_str(), DB::getDatabase()->getDBHostname().c_str(), DB::getDatabase()->getDBPort());
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%d", db.getDBName().c_str(), db.getDBHostname().c_str(), db.getDBPort());
         return false;
     }
 
@@ -61,10 +61,6 @@ bool DB::getStatusOK()
     return statusOK;
 }
 
-SQLConnector_MariaDB *DB::getDatabase()
-{
-    return &db;
-}
 
 bool DB::initSchema()
 {

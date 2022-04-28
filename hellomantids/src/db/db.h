@@ -31,8 +31,6 @@ public:
     ///////////////////
     static bool getStatusOK();
 
-    static Mantids::Database::SQLConnector_MariaDB *getDatabase();
-
 
 private:
     // WEB DISPLAY FUNCTIONS:
