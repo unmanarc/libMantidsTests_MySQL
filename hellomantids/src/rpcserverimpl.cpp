@@ -113,22 +113,22 @@ json RPCServerImpl::getHelloWorldMessage(void *, const std::string &nodeName, co
     return r;
 }
 
-bool RPCServerImpl::_callbackOnInitFailed(void * obj, Network::Streams::StreamSocket * s, const char * remotePairIPAddr, bool isSecure)
+bool RPCServerImpl::_callbackOnInitFailed(void * obj, Network::Streams::StreamSocket * s, const char * cUserIP, bool isSecure)
 {
-    Globals::getAppLog()->log1(__func__,remotePairIPAddr,Logs::LEVEL_ERR,  "Incoming RPC Client TLS initialization Failed...");
+    Globals::getAppLog()->log1(__func__,cUserIP,Logs::LEVEL_ERR,  "Incoming RPC Client TLS initialization Failed...");
 
     for (const auto & i :((Network::TLS::Socket_TLS *)s)->getTLSErrorsAndClear())
     {
         //        if (!strstr(i.c_str(),"certificate unknown"))
-        Globals::getAppLog()->log1(__func__,remotePairIPAddr,Logs::LEVEL_ERR, "RPC Login TLS Protocol Initialization Error: %s",  i.c_str());
+        Globals::getAppLog()->log1(__func__,cUserIP,Logs::LEVEL_ERR, "RPC Login TLS Protocol Initialization Error: %s",  i.c_str());
     }
 
     return true;
 }
 
-void RPCServerImpl::_callbackOnTimeOut(void * obj, Network::Streams::StreamSocket *s, const char * remotePairIPAddr, bool isSecure)
+void RPCServerImpl::_callbackOnTimeOut(void * obj, Network::Streams::StreamSocket *s, const char * cUserIP, bool isSecure)
 {
-    Globals::getAppLog()->log1(__func__,remotePairIPAddr,Logs::LEVEL_ERR,  "Client CN=%s timed out. Not enough threads...", ((Network::TLS::Socket_TLS *)s)->getTLSPeerCN().c_str());
+    Globals::getAppLog()->log1(__func__,cUserIP,Logs::LEVEL_ERR,  "Client CN=%s timed out. Not enough threads...", ((Network::TLS::Socket_TLS *)s)->getTLSPeerCN().c_str());
     return;
 }
 
