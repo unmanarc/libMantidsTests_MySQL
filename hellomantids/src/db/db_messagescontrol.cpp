@@ -9,6 +9,7 @@
 #include <mdz_mem_vars/a_var.h>
 #include <arpa/inet.h>
 
+#include <inttypes.h>
 
 using namespace Mantids::Memory;
 using namespace Mantids::Database;
@@ -46,14 +47,14 @@ json DB::removeMessage(Manager *auth, Session *sess, const json &payload)
     Mantids::Threads::Sync::Lock_RW lock(mutex);
     std::string lastSQLError;
 
-    Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "User '%s' is removing node '%lu'", sess->getAuthUser().c_str(),postId);
+    Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "User '%s' is removing node '%" PRIu32 "'", sess->getAuthUser().c_str(),postId);
 
     if (!db.query(&lastSQLError,"DELETE FROM posts WHERE `id`=:id;",
                                 {
                                    {":id",new Abstract::UINT32(postId)}
                                 }))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_ERR, "Can't remove post '%lu': %s",postId,  lastSQLError.c_str() );
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_ERR, "Can't remove post '%" PRIu32 "': %s",postId,  lastSQLError.c_str() );
 
         return false;
     }

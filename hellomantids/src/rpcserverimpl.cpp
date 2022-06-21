@@ -12,8 +12,7 @@
 #include <mdz_net_sockets/cryptostream.h>
 
 #include <string>
-
-
+#include <inttypes.h>
 
 using namespace Mantids;
 using namespace Application;
@@ -64,17 +63,17 @@ bool RPCServerImpl::createRPCListener()
 
     if (!sockRPCListen->setTLSCertificateAuthorityPath(Globals::getLC_RPCServer_TLSCAFilePath().c_str()))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%d: %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
         return false;
     }
     if (!sockRPCListen->setTLSPublicKeyPath( Globals::getLC_RPCServer_TLSCertFilePath().c_str() ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%d: %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
         return false;
     }
     if (!sockRPCListen->setTLSPrivateKeyPath( Globals::getLC_RPCServer_TLSKeyFilePath().c_str() ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%d: %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Private Key");
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Private Key");
         return false;
     }
 
@@ -93,12 +92,12 @@ bool RPCServerImpl::createRPCListener()
     {
         multiThreadedAcceptor->setAcceptorSocket(sockRPCListen);
         multiThreadedAcceptor->startThreaded();
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO,  "Accepting RPC clients @%s:%d via TLS", listenAddr.c_str(), listenPort);
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO,  "Accepting RPC clients @%s:%" PRIu16 " via TLS", listenAddr.c_str(), listenPort);
         return true;
     }
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%d: %s", listenAddr.c_str(), listenPort, sockRPCListen->getLastError().c_str());
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, sockRPCListen->getLastError().c_str());
         return false;
     }
 }

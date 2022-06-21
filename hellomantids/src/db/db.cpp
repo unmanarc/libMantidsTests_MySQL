@@ -12,6 +12,7 @@
 
 #include <mdz_mem_vars/a_var.h>
 #include <arpa/inet.h>
+#include <inttypes.h>
 
 #include "../globals.h"
 
@@ -43,7 +44,7 @@ bool DB::start()
         Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "Succesfully connected to MySQL Database server '%s' ", dbHost.c_str());
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%d", db.getDBName().c_str(), db.getDBHostname().c_str(), db.getDBPort());
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%" PRIu16, db.getDBName().c_str(), db.getDBHostname().c_str(), db.getDBPort());
         return false;
     }
 

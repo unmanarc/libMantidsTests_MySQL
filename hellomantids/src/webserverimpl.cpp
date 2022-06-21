@@ -12,6 +12,7 @@
 
 #include <sstream>
 #include <ostream>
+#include <inttypes.h>
 
 using namespace Mantids::Application;
 using namespace Mantids::Authentication;
@@ -81,12 +82,12 @@ bool WebServerImpl::createWebServer()
 
     if (!sockWebListen->setTLSPublicKeyPath(  Globals::getLC_WebServer_TLSCertFilePath().c_str()  ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%d: %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Public Key");
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Public Key");
         return false;
     }
     if (!sockWebListen->setTLSPrivateKeyPath( Globals::getLC_WebServer_TLSKeyFilePath().c_str()  ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%d: %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Private Key");
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Private Key");
         return false;
     }
 
@@ -148,12 +149,12 @@ bool WebServerImpl::createWebServer()
 
         webServer->acceptPoolThreaded(sockWebListen);
 
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO,  "Web Server Listening @%s:%d", listenAddr.c_str(), listenPort);
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO,  "Web Server Listening @%s:%" PRIu16, listenAddr.c_str(), listenPort);
         return true;
     }
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%d: %s", listenAddr.c_str(), listenPort, sockWebListen->getLastError().c_str());
+        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, sockWebListen->getLastError().c_str());
         return false;
     }
 }
