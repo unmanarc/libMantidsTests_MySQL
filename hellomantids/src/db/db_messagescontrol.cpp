@@ -25,7 +25,7 @@ json DB::createMessage(Mantids::Authentication::Manager *auth, Mantids::Authenti
     {
         Mantids::Threads::Sync::Lock_RW lock(mutex);
 
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "User '%s' is adding message '%s'", sess->getAuthUser().c_str(),message.c_str());
+        LOG_APP->log0(__func__,Logs::LEVEL_INFO, "User '%s' is adding message '%s'", sess->getAuthUser().c_str(),message.c_str());
 
         if (!
                 db.query(&lastSQLError,"INSERT INTO posts (`message`,`createdBy`) VALUES(:message,:createdBy);",
@@ -34,7 +34,7 @@ json DB::createMessage(Mantids::Authentication::Manager *auth, Mantids::Authenti
                                             {":createdBy",new Abstract::STRING(sess->getAuthUser())}
                                         }))
         {
-            Globals::getAppLog()->log0(__func__,Logs::LEVEL_ERR, "Can't add post message '%s': %s",message.c_str(),  lastSQLError.c_str() );
+            LOG_APP->log0(__func__,Logs::LEVEL_ERR, "Can't add post message '%s': %s",message.c_str(),  lastSQLError.c_str() );
             return false;
         }
     }
@@ -47,14 +47,14 @@ json DB::removeMessage(Manager *auth, Session *sess, const json &payload)
     Mantids::Threads::Sync::Lock_RW lock(mutex);
     std::string lastSQLError;
 
-    Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "User '%s' is removing node '%" PRIu32 "'", sess->getAuthUser().c_str(),postId);
+    LOG_APP->log0(__func__,Logs::LEVEL_INFO, "User '%s' is removing node '%" PRIu32 "'", sess->getAuthUser().c_str(),postId);
 
     if (!db.query(&lastSQLError,"DELETE FROM posts WHERE `id`=:id;",
                                 {
                                    {":id",new Abstract::UINT32(postId)}
                                 }))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_ERR, "Can't remove post '%" PRIu32 "': %s",postId,  lastSQLError.c_str() );
+        LOG_APP->log0(__func__,Logs::LEVEL_ERR, "Can't remove post '%" PRIu32 "': %s",postId,  lastSQLError.c_str() );
 
         return false;
     }

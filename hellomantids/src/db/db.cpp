@@ -41,16 +41,16 @@ bool DB::start()
     statusOK = db.connect(dbHost, dbPort, dbAuth, dbName);
     
     if (statusOK)
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "Succesfully connected to MySQL Database server '%s' ", dbHost.c_str());
+        LOG_APP->log0(__func__,Logs::LEVEL_INFO, "Succesfully connected to MySQL Database server '%s' ", dbHost.c_str());
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%" PRIu16, db.getDBName().c_str(), db.getDBHostname().c_str(), db.getDBPort());
+        LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to connect to the database: %s @%s:%" PRIu16, db.getDBName().c_str(), db.getDBHostname().c_str(), db.getDBPort());
         return false;
     }
 
     if (!initSchema())
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_ERR, "Failed to initialize schema @ MySQL Database");
+        LOG_APP->log0(__func__,Logs::LEVEL_ERR, "Failed to initialize schema @ MySQL Database");
         return false;
     }
 

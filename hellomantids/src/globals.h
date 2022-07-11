@@ -15,6 +15,9 @@
 #include <mutex>
 #include <list>
 
+#define LOG_APP Globals::getAppLog()
+#define LOG_RPC Globals::getRPCLog()
+
 class Globals : public Config_LocalIni
 {
 public:

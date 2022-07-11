@@ -46,7 +46,7 @@ json WebServerImpl::rmtCaller(const std::string &caller, Manager *auth, Session 
 
     if (JSON_ASBOOL(error,"succeed",false) == false)
     {
-        Globals::getAppLog()->log2(__func__, sess->getUserID(),"", Logs::LEVEL_ERR, "Error (%d) Executing Remote RPC Method '%s' at '%s': '%s'",
+        LOG_APP->log2(__func__, sess->getUserID(),"", Logs::LEVEL_ERR, "Error (%d) Executing Remote RPC Method '%s' at '%s': '%s'",
                                    JSON_ASINT(error,"errorId",-1),
                                    remoteMethod.c_str(),
                                    JSON_ASCSTRING(jInput,"target",""),
@@ -55,7 +55,7 @@ json WebServerImpl::rmtCaller(const std::string &caller, Manager *auth, Session 
     }
     else
     {
-        Globals::getAppLog()->log2(__func__, sess->getUserID(),"", Logs::LEVEL_INFO, "Remote RPC Method '%s' Executed at '%s'.",
+        LOG_APP->log2(__func__, sess->getUserID(),"", Logs::LEVEL_INFO, "Remote RPC Method '%s' Executed at '%s'.",
                                    remoteMethod.c_str(),
                                    JSON_ASCSTRING(jInput,"target","")
                                    );
@@ -75,19 +75,19 @@ json WebServerImpl::statMethods(void *, Manager *auth, Session *sess, const json
 bool WebServerImpl::createWebServer()
 {
     std::string sAppName = Globals::getLC_LoginRPC_AppName();
-    Mantids::Network::TLS::Socket_TLS * sockWebListen = new Mantids::Network::TLS::Socket_TLS;
+    Mantids::Network::Sockets::Socket_TLS * sockWebListen = new Mantids::Network::Sockets::Socket_TLS;
 
     uint16_t listenPort = Globals::getLC_WebServer_ListenPort();
     std::string listenAddr = Globals::getLC_WebServer_ListenAddr();
 
     if (!sockWebListen->setTLSPublicKeyPath(  Globals::getLC_WebServer_TLSCertFilePath().c_str()  ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Public Key");
+        LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Public Key");
         return false;
     }
     if (!sockWebListen->setTLSPrivateKeyPath( Globals::getLC_WebServer_TLSKeyFilePath().c_str()  ))
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Private Key");
+        LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Private Key");
         return false;
     }
 
@@ -106,22 +106,22 @@ bool WebServerImpl::createWebServer()
         {
             if (!authManager->attribAdd({sAppName,"control"},"Control Access"))
             {
-                Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to create attribute in ther authentication server.");
+                LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to create attribute in ther authentication server.");
                 return false;
             }
             else
-                Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "Attrib 'control' initialized.");
+                LOG_APP->log0(__func__,Logs::LEVEL_INFO, "Attrib 'control' initialized.");
 
         }
         if (!authManager->attribExist({sAppName,"stats"}))
         {
             if (!authManager->attribAdd({sAppName,"stats"},"Stats Access"))
             {
-                Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to create attribute in ther authentication server.");
+                LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Failed to create attribute in ther authentication server.");
                 return false;
             }
             else
-                Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO, "Attrib 'stats' initialized.");
+                LOG_APP->log0(__func__,Logs::LEVEL_INFO, "Attrib 'stats' initialized.");
         }
         // Add the default domain / auth:
         authDomains->addDomain("",authManager);
@@ -134,39 +134,39 @@ bool WebServerImpl::createWebServer()
 
         WebServer * webServer = new WebServer;
         Globals::setWebServer(webServer);
-        webServer->setRPCLog(Globals::getRPCLog());
+        webServer->setRPCLog(LOG_RPC);
 
         std::string resourcesPath = Globals::getLC_WebServer_ResourcesPath();
         if (!webServer->setDocumentRootPath( resourcesPath ))
         {
-            Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error locating web server resources at %s",resourcesPath.c_str() );
+            LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error locating web server resources at %s",resourcesPath.c_str() );
             return false;
         }
         webServer->setAuthenticator(authDomains);
         webServer->setMethodManagers(methodsManagers);
-        webServer->setSoftwareVersion(atoi(PROJECT_VER_MAJOR), atoi(PROJECT_VER_MINOR), atoi(PTOJECT_VER_PATCH), PROJECT_NAME);
+        webServer->setSoftwareVersion(atoi(PROJECT_VER_MAJOR), atoi(PROJECT_VER_MINOR), atoi(PROJECT_VER_PATCH), PROJECT_NAME);
         webServer->setExtCallBackOnInitFailed(WebServerImpl::protoInitFail);
 
         webServer->acceptPoolThreaded(sockWebListen);
 
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_INFO,  "Web Server Listening @%s:%" PRIu16, listenAddr.c_str(), listenPort);
+        LOG_APP->log0(__func__,Logs::LEVEL_INFO,  "Web Server Listening @%s:%" PRIu16, listenAddr.c_str(), listenPort);
         return true;
     }
     else
     {
-        Globals::getAppLog()->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, sockWebListen->getLastError().c_str());
+        LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, sockWebListen->getLastError().c_str());
         return false;
     }
 }
 
-bool WebServerImpl::protoInitFail(void * , Network::Streams::StreamSocket * sock, const char * remoteIP, bool )
+bool WebServerImpl::protoInitFail(void * , Network::Sockets::Socket_StreamBase * sock, const char * remoteIP, bool )
 {
-    Mantids::Network::TLS::Socket_TLS * secSocket = (Mantids::Network::TLS::Socket_TLS *)sock;
+    Mantids::Network::Sockets::Socket_TLS * secSocket = (Mantids::Network::Sockets::Socket_TLS *)sock;
 
     for (const auto & i :secSocket->getTLSErrorsAndClear())
     {
         if (!strstr(i.c_str(),"certificate unknown"))
-            Globals::getAppLog()->log1(__func__, remoteIP,Logs::LEVEL_ERR, "TLS Protocol Initialization: %s", i.c_str());
+            LOG_APP->log1(__func__, remoteIP,Logs::LEVEL_ERR, "TLS Protocol Initialization: %s", i.c_str());
     }
     return true;
 }
