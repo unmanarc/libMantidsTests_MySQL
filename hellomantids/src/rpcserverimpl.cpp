@@ -61,17 +61,17 @@ bool RPCServerImpl::createRPCListener()
     uint16_t listenPort = Globals::getLC_RPCServer_ListenPort();
     string listenAddr = Globals::getLC_RPCServer_ListenAddr();
 
-    if (!sockRPCListen->setTLSCertificateAuthorityPath(Globals::getLC_RPCServer_TLSCAFilePath().c_str()))
+    if (!sockRPCListen->keys.loadCAFromPEMFile(Globals::getLC_RPCServer_TLSCAFilePath().c_str()))
     {
         LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
         return false;
     }
-    if (!sockRPCListen->setTLSPublicKeyPath( Globals::getLC_RPCServer_TLSCertFilePath().c_str() ))
+    if (!sockRPCListen->keys.loadPublicKeyFromPEMFile( Globals::getLC_RPCServer_TLSCertFilePath().c_str() ))
     {
         LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");
         return false;
     }
-    if (!sockRPCListen->setTLSPrivateKeyPath( Globals::getLC_RPCServer_TLSKeyFilePath().c_str() ))
+    if (!sockRPCListen->keys.loadPrivateKeyFromPEMFile( Globals::getLC_RPCServer_TLSKeyFilePath().c_str() ))
     {
         LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Private Key");
         return false;
