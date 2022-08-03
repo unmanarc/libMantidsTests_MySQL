@@ -61,6 +61,9 @@ bool RPCServerImpl::createRPCListener()
     uint16_t listenPort = Globals::getLC_RPCServer_ListenPort();
     string listenAddr = Globals::getLC_RPCServer_ListenAddr();
 
+    // Set the SO default security level:
+    sockRPCListen->keys.setSecurityLevel(-1);
+
     if (!sockRPCListen->keys.loadCAFromPEMFile(Globals::getLC_RPCServer_TLSCAFilePath().c_str()))
     {
         LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting RPC Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS RPC Server Public Key");

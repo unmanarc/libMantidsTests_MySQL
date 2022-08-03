@@ -80,6 +80,10 @@ bool WebServerImpl::createWebServer()
     uint16_t listenPort = Globals::getLC_WebServer_ListenPort();
     std::string listenAddr = Globals::getLC_WebServer_ListenAddr();
 
+    // Set the SO default security level:
+    sockWebListen->keys.setSecurityLevel(-1);
+
+
     if (!sockWebListen->keys.loadPublicKeyFromPEMFile(  Globals::getLC_WebServer_TLSCertFilePath().c_str()  ))
     {
         LOG_APP->log0(__func__,Logs::LEVEL_CRITICAL, "Error starting Web Server @%s:%" PRIu16 ": %s", listenAddr.c_str(), listenPort, "Bad TLS WEB Server Public Key");
