@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 include(GNUInstallDirs)
 
 set(APP_NAME "hellomantids")
-set(SVERSION 1.0.0)
 
 
 ######################################
