@@ -27,12 +27,10 @@ json DB::getMessages(Manager *auth, Session *sess, const json &)
 
     Mantids::Threads::Sync::Lock_RD lock(mutex);
 
-    std::shared_ptr<QueryInstance> i = db.query("SELECT `id`,`message`,`createdBy`,`creationDate` FROM posts;",
-                               {
-                               },
-                               { &id, &message , &createdBy,&creationDate});
+    std::shared_ptr<SQLConnector::QueryInstance> i = db.qSelect("SELECT `id`,`message`,`createdBy`,`creationDate` FROM posts;", {},
+                                                                      { &id, &message , &createdBy,&creationDate});
     int j=0;
-    while (i->ok && i->query->step())
+    while (i->getResultsOK() && i->query->step())
     {
 
         ret[j]["id"] = id.getValue();
