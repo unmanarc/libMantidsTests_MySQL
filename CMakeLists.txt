@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 ##############################################################################################################################
 # Vars and Versions:
-set(SVERSION 2.7.3)
+set(SVERSION 2.7.5)
 
 set(PROJECT_HOMEPAGE_URL "https://github.com/evaamo/libMantidsMariaDBTests")
 set(PROJECT_CONTACT "Enrique Vaamonde <ev@dqddi.com>")
